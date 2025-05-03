@@ -1,21 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    [Header("Scènes")]
-    public string levelToLoad = "scene principal"; 
-
-    [Header("UI")]
-    public GameObject settingsWindow;
-
-    // lance le jeu
-    public void PlayGame()
+    public void StartSceneByIndex(int p_index)
     {
-        SceneManager.LoadScene(levelToLoad);
+        SceneManager.LoadScene(p_index);
     }
 
-    // Quitte le jeu
+    public void StartSceneByName(string p_name)
+    {
+        SceneManager.LoadScene(p_name);
+    }
+
     public void QuitGame()
     {
         Application.Quit();
