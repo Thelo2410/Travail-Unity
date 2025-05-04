@@ -26,10 +26,6 @@ public class LadderMovement : MonoBehaviour
             rb.gravityScale = 0f; // en grimpant : pas de gravité
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, vertical * speed); 
         }
-        else
-        {
-            rb.gravityScale = 4f; // gravité normale
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
