@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8564541416821135392}
   m_Layer: 8
   m_Name: LongSword_PickUp
-  m_TagString: Untagged
+  m_TagString: WeaponPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -148,3 +148,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 0e0d35cb92ff4452ca0a9cfe9bfd0ac6, type: 2}
+  pickupDelay: 1

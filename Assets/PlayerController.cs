@@ -10,12 +10,9 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rb;
     public Collider2D playerCollider;
 
-    [Header("Stats")]
-    [SerializeField] private PlayerStats _stat; // Stats de base du joueur 
-
     [Header("Mouvement & Saut")]
     [SerializeField] private float moveSpeed = 16f;
-    [SerializeField] private float jumpForce = 10f; 
+    [SerializeField] private float jumpForce = 15f; 
     [SerializeField] private float wallJumpForce = 16f; 
     [SerializeField] private float wallJumpHorizontalForce = 8f;
     [SerializeField] private float wallSlideSpeed = 2f;
@@ -86,10 +83,6 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0f; // desactive la gravité
 
         currentFuel = fuel;
-
-        //  stats du struct
-        if (_stat.speed > 0) moveSpeed = _stat.speed;
-        if (_stat.life > 0) jumpForce = _stat.life;
     }
 
     void Update()
@@ -307,7 +300,7 @@ public class PlayerController : MonoBehaviour
         {
             equippedWeaponGO = Instantiate(currentWeapon.weaponVisualPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
         }
-
+        
         canAttack = true;
     }
 
@@ -375,7 +368,7 @@ public class PlayerController : MonoBehaviour
         // Détection des ennemis dans une zone devant le joueur
         Vector2 attackOrigin = firePoint.position;
         Vector2 attackDirection = isFacingRight ? Vector2.right : Vector2.left;
-        float range = 2f;
+        float range = 3.5f;
         float width = 0.5f;
         Vector2 boxSize = new Vector2(range, width);
         Vector2 boxCenter = (Vector2)firePoint.position + attackDirection * (range / 2f);
@@ -398,7 +391,7 @@ public class PlayerController : MonoBehaviour
             Instantiate(currentWeapon.attackEffectPrefab, firePoint.position, Quaternion.identity);
         }
 
-        float radius = 1.5f;
+        float radius = 3.5f;
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius, LayerMask.GetMask("Enemy"));
 
         foreach (Collider2D enemy in hits)

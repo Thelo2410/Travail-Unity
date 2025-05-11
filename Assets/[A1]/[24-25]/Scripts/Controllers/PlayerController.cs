@@ -70,7 +70,7 @@ namespace A1_24_25
 
         void Jump() 
         {
-            _rgbd2D.velocity = Vector2.up * Stat.forceJump;
+            _rgbd2D.linearVelocity = Vector2.up * Stat.forceJump;
             _currentJump++;
         }
 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5797844273943328302}
   m_Layer: 0
   m_Name: Bow_PickUp
-  m_TagString: Untagged
+  m_TagString: WeaponPickup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -148,3 +148,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 2e0142e6cbee246dfbb751f1771ade26, type: 2}
+  pickupDelay: 1

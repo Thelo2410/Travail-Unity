@@ -1,55 +1,58 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public static bool GameIsPaused
-    {
-        get => _gameIsPaused;
-        set
-        {
-            _gameIsPaused = value;
-            Time.timeScale = value ? 0f : 1f;
-        }
-    }
-
-    private static bool _gameIsPaused = false;
+    public static bool gameIsPaused = false;
 
     public GameObject pauseMenuUI;
+
     public GameObject settingsWindow;
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyDown(KeyCode.Escape))
         {
-            if (GameIsPaused)
+            if(gameIsPaused)
+            {
                 Resume();
+            }
             else
-                Pause();
+            {
+                Paused();
+            }
         }
     }
 
-    public void Pause()
+    void Paused()
     {
+        PlayerController.instance.enabled = false;
         pauseMenuUI.SetActive(true);
-        GameIsPaused = true;
-
-        if (PlayerMovement.instance != null)
-            PlayerMovement.instance.enabled = false;
+        Time.timeScale = 0;
+        gameIsPaused = true;
     }
 
     public void Resume()
     {
+        PlayerController.instance.enabled = true;
         pauseMenuUI.SetActive(false);
-        GameIsPaused = false;
+        Time.timeScale = 1;
+        gameIsPaused = false;
+    }
 
-        if (PlayerMovement.instance != null)
-            PlayerMovement.instance.enabled = true;
+    public void OpenSettingsWindow()
+    {
+        settingsWindow.SetActive(true);
+    }
+
+    public void CloseSettingsWindow()
+    {
+        settingsWindow.SetActive(false);
     }
 
     public void LoadMainMenu()
     {
-        GameIsPaused = false;
-        SceneManager.LoadScene("main menu"); 
+        Resume();
+        SceneManager.LoadScene("main_menu");
     }
 }
