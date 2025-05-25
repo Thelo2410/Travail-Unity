@@ -1,9 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
-/// Gère les déplacements du joueur, les sauts, les wall jumps, et le système de planage (gliding).
-/// + systeme de carburant type slider
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController instance;
@@ -25,14 +22,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float fuel = 100f;
     [SerializeField] private float fuelBurnRate = 30f; 
     [SerializeField] private float fuelRefillRate = 20f; 
-    [SerializeField] private Slider fuelSlider; //slider
+    [SerializeField] private Slider fuelSlider;
 
     [Header("Sol & Murs")]
     [SerializeField] private float boxLength = 1f; 
     [SerializeField] private float boxHeight = 0.2f; 
     [SerializeField] private float wallCheckDistance = 0.6f; 
-    [SerializeField] private Transform groundPosition; // Position detection sol
-    [SerializeField] private Transform wallCheckPosition; // Position  détection mur
+    [SerializeField] private Transform groundPosition;
+    [SerializeField] private Transform wallCheckPosition;
     [SerializeField] private LayerMask groundLayer; 
     
     [SerializeField] private LayerMask wallLayer; 
@@ -43,7 +40,7 @@ public class PlayerController : MonoBehaviour
     private float jumpBufferTimer;
     private float jumpBufferTime = 0.15f; 
     private float coyoteTimer;
-    private float coyoteTime = 0.15f; // Délai après avoir quitté le sol pour permettre un saut
+    private float coyoteTime = 0.15f;
 
     private bool canDoubleJump;
     private bool grounded;
@@ -58,17 +55,17 @@ public class PlayerController : MonoBehaviour
     private float currentFuel;
     private bool isFacingRight = true;
 
-    public Transform firePoint;  // Point où l'attaque se déclenche (au bout de la main par exemple)
+    public Transform firePoint;
     public GameObject weaponPickupPrefab;
 
-    private Weapon currentWeapon;  // Arme actuelle que le joueur utilise
-    private float attackCooldown = 0f;  // Pour contrôler le délai entre les attaques
-    private bool canAttack = true;  // Pour contrôler quand attaquer
+    private Weapon currentWeapon;
+    private float attackCooldown = 0f;
+    private bool canAttack = true;
 
-    private WeaponPickup nearbyWeapon;  // Arme à ramasser
+    private WeaponPickup nearbyWeapon;
 
-    public Transform weaponHolder;  // assigné dans l’inspecteur
-    private GameObject equippedWeaponGO;  // l’objet visuel actuellement équipé
+    public Transform weaponHolder;
+    private GameObject equippedWeaponGO;
 
 
     void Awake()
@@ -80,7 +77,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
-        rb.gravityScale = 0f; // desactive la gravité
+        rb.gravityScale = 0f;
 
         currentFuel = fuel;
     }
@@ -107,7 +104,6 @@ public class PlayerController : MonoBehaviour
 
         if (!isWallJumping) Flip();
 
-        // Ramasser l'arme avec T
         if (Input.GetKeyDown(KeyCode.T) && nearbyWeapon != null && nearbyWeapon.CanBePickedUp())
         {
            EquipWeapon(nearbyWeapon.weaponData);
@@ -115,13 +111,11 @@ public class PlayerController : MonoBehaviour
             nearbyWeapon = null;
         }
 
-        // Reposer l'arme avec F
         if (Input.GetKeyDown(KeyCode.F) && currentWeapon != null)
         {
             DropWeapon(currentWeapon);
         }
 
-        // Attaquer si une arme est équipée et si le cooldown est terminé
         if (Input.GetButtonDown("Fire1") && currentWeapon != null && canAttack)
         {
             Attack();
@@ -132,7 +126,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Détection sol
         Collider2D[] hits = Physics2D.OverlapBoxAll(groundPosition.position, new Vector2(boxLength, boxHeight), 0f);
         grounded = false;
         foreach (Collider2D hit in hits)
@@ -146,10 +139,8 @@ public class PlayerController : MonoBehaviour
 
         coyoteTimer = grounded ? coyoteTime : coyoteTimer - Time.fixedDeltaTime;
 
-        // Détection mur
         touchingWall = Physics2D.Raycast(transform.position, Vector2.right * (isFacingRight ? 1 : -1), wallCheckDistance, wallLayer);
 
-        // Mouvement horizontal
         if (!isWallJumping)
         {
             rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
@@ -157,22 +148,20 @@ public class PlayerController : MonoBehaviour
 
         HandleJump();
 
-        // Glide (descente ralentie/planer)
         bool isGliding = Input.GetButton("Jump") && rb.linearVelocity.y < 0f && currentFuel > 0f;
 
         if (isGliding)
         {
-            rb.gravityScale = 1f; // planage
+            rb.gravityScale = 1f;
             currentFuel -= fuelBurnRate * Time.fixedDeltaTime;
         }
         else
         {
-            rb.gravityScale = 3f; // chute normale
+            rb.gravityScale = 3f;
         }
 
         if (grounded) RefillFuel();
 
-        // Rotation visuelle(donne l'impression qu'il plane)
         float targetAngle = Mathf.Clamp(-moveInput * maxTiltAngle, -maxTiltAngle, maxTiltAngle);
         float smoothAngle = Mathf.LerpAngle(rb.rotation, targetAngle, rotationSpeed * Time.fixedDeltaTime);
         rb.MoveRotation(smoothAngle);
@@ -188,7 +177,6 @@ public class PlayerController : MonoBehaviour
 
     void HandleJump()
     {
-        // Saut normal (avec coyote time)
         if (jumpBuffered && coyoteTimer > 0f)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -196,7 +184,6 @@ public class PlayerController : MonoBehaviour
             isWallJumping = false;
             jumpBuffered = false;
         }
-        // Double saut (uniquement si en l'air et pas collé au mur)
         else if (jumpBuffered && canDoubleJump && !grounded && !touchingWall)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
@@ -233,7 +220,6 @@ public class PlayerController : MonoBehaviour
             wallJumpingCounter = 0f;
             canDoubleJump = true;
 
-            // inverse la direction visuelle du joueur
             if (transform.localScale.x != wallJumpingDirection)
             {
                 isFacingRight = !isFacingRight;
@@ -267,7 +253,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    /// affiche la zone de détection du sol dans l'éditeur(car j'avais eu des bug jpp )
     void OnDrawGizmosSelected()
     {
         if (groundPosition == null) return;
@@ -285,12 +270,11 @@ public class PlayerController : MonoBehaviour
     {
         if (currentWeapon != null)
         {
-            DropWeapon(newWeapon);
+            DropWeapon(currentWeapon);
         }
 
         currentWeapon = newWeapon;
 
-        // Afficher l’arme dans la main
         if (equippedWeaponGO != null)
         {
             Destroy(equippedWeaponGO);
@@ -309,7 +293,6 @@ public class PlayerController : MonoBehaviour
     {
         if (weaponToDrop == null) return;
 
-        // Créer l'arme au sol
         GameObject droppedWeapon = Instantiate(weaponPickupPrefab, transform.position + Vector3.right * 1f, Quaternion.identity);
         WeaponPickup pickup = droppedWeapon.GetComponent<WeaponPickup>();
 
@@ -323,14 +306,12 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        // Supprimer l’arme visuelle de la main
         if (equippedWeaponGO != null)
         {
             Destroy(equippedWeaponGO);
             equippedWeaponGO = null;
         }
 
-        // Réinitialiser l’arme actuelle
         currentWeapon = null;
         canAttack = false;
 
@@ -342,7 +323,6 @@ public class PlayerController : MonoBehaviour
     {
         if (currentWeapon == null) return;
 
-        // Appeler l'attaque en fonction du type d'arme
         switch (currentWeapon.weaponType)
         {
             case WeaponType.Sword:
@@ -359,41 +339,44 @@ public class PlayerController : MonoBehaviour
 
     void SwordAttack()
     {
-        // Affichage visuel de l'effet (optionnel)
-        if (currentWeapon.attackEffectPrefab != null)
-        {
-            Instantiate(currentWeapon.attackEffectPrefab, firePoint.position, firePoint.rotation);
-        }
-
-        // Détection des ennemis dans une zone devant le joueur
-        Vector2 attackOrigin = firePoint.position;
         Vector2 attackDirection = isFacingRight ? Vector2.right : Vector2.left;
         float range = 3.5f;
         float width = 0.5f;
         Vector2 boxSize = new Vector2(range, width);
         Vector2 boxCenter = (Vector2)firePoint.position + attackDirection * (range / 2f);
 
+        if (currentWeapon.attackEffectPrefab != null)
+        {
+            GameObject fx = Instantiate(currentWeapon.attackEffectPrefab, boxCenter, Quaternion.identity);
+            fx.transform.localScale = new Vector3(range, width, 1f);
+            Destroy(fx, 0.3f);
+        }
+
         Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, 0f, LayerMask.GetMask("Enemy"));
         foreach (Collider2D hit in hits)
         {
-            // Tu peux adapter cette méthode selon ton système de dégâts
             hit.GetComponent<Enemy>()?.TakeDamage(5);
         }
 
         canAttack = false;
-        Invoke(nameof(ResetAttack), 0.5f); // délai entre attaques
+        Invoke(nameof(ResetAttack), 0.5f);
     }
+
+
 
     void AxeAttack()
     {
+        float radius = 3.5f;
+        Vector3 center = transform.position;
+
         if (currentWeapon.attackEffectPrefab != null)
         {
-            Instantiate(currentWeapon.attackEffectPrefab, firePoint.position, Quaternion.identity);
+            GameObject fx = Instantiate(currentWeapon.attackEffectPrefab, center, Quaternion.identity);
+            fx.transform.localScale = new Vector3(radius * 2f, radius * 2f, 1f);
+            Destroy(fx, 0.3f);
         }
 
-        float radius = 3.5f;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, radius, LayerMask.GetMask("Enemy"));
-
+        Collider2D[] hits = Physics2D.OverlapCircleAll(center, radius, LayerMask.GetMask("Enemy"));
         foreach (Collider2D enemy in hits)
         {
             enemy.GetComponent<Enemy>()?.TakeDamage(8);
@@ -402,6 +385,7 @@ public class PlayerController : MonoBehaviour
         canAttack = false;
         Invoke(nameof(ResetAttack), 1f);
     }
+
 
     void BowAttack()
     {
@@ -426,7 +410,6 @@ public class PlayerController : MonoBehaviour
         canAttack = true;
     }
 
-    // Détection d'une arme à ramasser
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("WeaponPickup"))

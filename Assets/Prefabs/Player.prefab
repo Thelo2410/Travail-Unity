@@ -172,9 +172,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 6453624055062303431}
   playerCollider: {fileID: 6275095940365504269}
-  _stat:
-    speed: 0
-    life: 100
   moveSpeed: 8
   jumpForce: 15
   wallJumpForce: 10
@@ -194,10 +191,10 @@ MonoBehaviour:
   wallCheckPosition: {fileID: 920669721813150761}
   groundLayer:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   wallLayer:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 0
   firePoint: {fileID: 5394432884637142390}
   weaponPickupPrefab: {fileID: 6156664560480541188, guid: 7c73992924ae2451bb6d390e0c6a68ad, type: 3}
   weaponHolder: {fileID: 4935499574599966578}
@@ -214,6 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  hitSound: {fileID: 0}
   invincibilityTimeAfterHit: 2
   invincibilityFlashDelay: 0.2
   isInvincible: 0

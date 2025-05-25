@@ -33,7 +33,8 @@ public class Enemy : MonoBehaviour
         {
             Instantiate(deathEffect, transform.position, Quaternion.identity);
         }
-
+        
+        GetComponent<LootDropper>()?.DropLoot();
         Destroy(gameObject);
     }
 }

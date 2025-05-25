@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 6145018233621371588}
   - component: {fileID: 2262042248547353011}
   - component: {fileID: 1391782081447593237}
+  - component: {fileID: 5465726972417115374}
   m_Layer: 3
   m_Name: Graphics
   m_TagString: Enemy
@@ -226,3 +227,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 50
   deathEffect: {fileID: 0}
+--- !u!114 &5465726972417115374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7239252673970032763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bfa780d9985040408979eb1bc8d5c43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lootTable:
+  - arme: {fileID: 11400000, guid: 566b6262fe71b42c796ffedbfee8ccc4, type: 2}
+    chanceDrop: 0.703
+  - arme: {fileID: 11400000, guid: 2e0142e6cbee246dfbb751f1771ade26, type: 2}
+    chanceDrop: 0.7
+  - arme: {fileID: 11400000, guid: 0e0d35cb92ff4452ca0a9cfe9bfd0ac6, type: 2}
+    chanceDrop: 0.7
