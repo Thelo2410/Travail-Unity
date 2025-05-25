@@ -240,9 +240,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lootTable:
-  - arme: {fileID: 11400000, guid: 566b6262fe71b42c796ffedbfee8ccc4, type: 2}
+  - prefabLootable: {fileID: 7216179600488272497, guid: 0f5b16cf866bc4780822e59c73486fc4, type: 3}
     chanceDrop: 0.703
-  - arme: {fileID: 11400000, guid: 2e0142e6cbee246dfbb751f1771ade26, type: 2}
+  - prefabLootable: {fileID: 6337000357441790214, guid: 820765aed3e694af4a762eafdb317d6b, type: 3}
     chanceDrop: 0.7
-  - arme: {fileID: 11400000, guid: 0e0d35cb92ff4452ca0a9cfe9bfd0ac6, type: 2}
+  - prefabLootable: {fileID: 55511621361748549, guid: 4ee8a8964ed184dc2ac374bc221c3b4a, type: 3}
     chanceDrop: 0.7
