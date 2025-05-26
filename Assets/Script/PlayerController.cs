@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        moveInput = Input.GetAxisRaw("Horizontal");
+        moveInput = Input.GetAxis("Horizontal");
         jumpPressed = Input.GetButtonDown("Jump");
         fuelSlider.value = currentFuel / fuel;
         //verifie si le joueur est entrain de courir(equivalent a avancer quoi)
