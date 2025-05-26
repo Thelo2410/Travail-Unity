@@ -42,6 +42,11 @@ public class PlayerController : MonoBehaviour
     private float coyoteTimer;
     private float coyoteTime = 0.15f;
 
+    private Animator animator;
+    private SpriteRenderer spriteRenderer;
+
+
+
     private bool canDoubleJump;
     private bool grounded;
     private bool touchingWall;
@@ -80,6 +85,9 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0f;
 
         currentFuel = fuel;
+        //initatilisation de l'animator
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -87,6 +95,9 @@ public class PlayerController : MonoBehaviour
         moveInput = Input.GetAxisRaw("Horizontal");
         jumpPressed = Input.GetButtonDown("Jump");
         fuelSlider.value = currentFuel / fuel;
+        //verifie si le joueur est entrain de courir(equivalent a avancer quoi)
+        bool isRunning = !Mathf.Approximately(moveInput, 0f);
+        animator.SetBool("isRunning", isRunning);//parametre bool isrunning(donc il court)
 
         if (jumpPressed)
         {
@@ -101,6 +112,9 @@ public class PlayerController : MonoBehaviour
 
         WallSlide();
         WallJump();
+        
+        if (!isWallJumping)
+            Flip();
 
         if (!isWallJumping) Flip();
 
