@@ -44,7 +44,8 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
     private SpriteRenderer spriteRenderer;
-
+    public GameObject jumpDustPrefab;
+    public GameObject landDustPrefab;
 
 
     private bool canDoubleJump;
@@ -140,6 +141,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        bool wasGrounded = grounded;
         Collider2D[] hits = Physics2D.OverlapBoxAll(groundPosition.position, new Vector2(boxLength, boxHeight), 0f);
         grounded = false;
         foreach (Collider2D hit in hits)
@@ -150,6 +152,12 @@ public class PlayerController : MonoBehaviour
                 break;
             }
         }
+
+        if (!wasGrounded && grounded && rb.linearVelocity.y < -2f)
+        {
+            TriggerLandParticles();
+        }
+
 
         coyoteTimer = grounded ? coyoteTime : coyoteTimer - Time.fixedDeltaTime;
 
@@ -183,6 +191,7 @@ public class PlayerController : MonoBehaviour
         if (jumpBuffered && coyoteTimer > 0f)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            TriggerJumpParticles(); 
             canDoubleJump = true;
             isWallJumping = false;
             jumpBuffered = false;
@@ -192,6 +201,23 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             canDoubleJump = false;
             jumpBuffered = false;
+        }
+    }
+
+    void TriggerJumpParticles()
+    {
+        if (jumpDustPrefab != null)
+        {
+            Vector3 spawnPos = new Vector3(transform.position.x, groundPosition.position.y, 0);
+            Instantiate(jumpDustPrefab, spawnPos, Quaternion.identity);
+        }
+    }
+    void TriggerLandParticles()
+    {
+        if (landDustPrefab != null)
+        {
+            Vector3 spawnPos = new Vector3(transform.position.x, groundPosition.position.y, 0);
+            Instantiate(landDustPrefab, spawnPos, Quaternion.identity);
         }
     }
 

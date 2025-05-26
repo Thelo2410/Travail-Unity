@@ -70374,6 +70374,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 583696566}
     - target: {fileID: 5260115040489247743, guid: 3cf809e23c743ed42a98301efc6e047b, type: 3}
+      propertyPath: jumpDustPrefab
+      value: 
+      objectReference: {fileID: 6364982908651376994, guid: ce5334cab34904489a7df9cd1ac3637f, type: 3}
+    - target: {fileID: 5260115040489247743, guid: 3cf809e23c743ed42a98301efc6e047b, type: 3}
+      propertyPath: landDustPrefab
+      value: 
+      objectReference: {fileID: 4298912242617233988, guid: 65c254a47119a4b5f8bd65d83421a785, type: 3}
+    - target: {fileID: 5260115040489247743, guid: 3cf809e23c743ed42a98301efc6e047b, type: 3}
       propertyPath: wallLayer.m_Bits
       value: 0
       objectReference: {fileID: 0}
