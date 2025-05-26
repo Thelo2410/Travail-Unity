@@ -16,7 +16,7 @@ public class PickUpItem : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && isInRange)
+        if (Input.GetKeyDown(KeyCode.T) && isInRange)
         {
             TakeItem();
         }
