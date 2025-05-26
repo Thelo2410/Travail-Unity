@@ -246,3 +246,7 @@ MonoBehaviour:
     chanceDrop: 0.7
   - prefabLootable: {fileID: 55511621361748549, guid: 4ee8a8964ed184dc2ac374bc221c3b4a, type: 3}
     chanceDrop: 0.67
+  - prefabLootable: {fileID: 419001794341515816, guid: ce2ebc6ed4c2544c587ccd9b1c35b068, type: 3}
+    chanceDrop: 0.67
+  - prefabLootable: {fileID: 5725885361702132920, guid: b734d9be832ee4125a64464d9283c34c, type: 3}
+    chanceDrop: 0.67

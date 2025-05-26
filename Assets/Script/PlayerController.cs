@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public Collider2D playerCollider;
 
     [Header("Mouvement & Saut")]
-    [SerializeField] private float moveSpeed = 16f;
+    public float moveSpeed = 16f;
     [SerializeField] private float jumpForce = 15f; 
     [SerializeField] private float wallJumpForce = 16f; 
     [SerializeField] private float wallJumpHorizontalForce = 8f;
