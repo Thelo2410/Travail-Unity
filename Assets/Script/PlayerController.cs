@@ -296,19 +296,34 @@ public class PlayerController : MonoBehaviour
     {
         if (weaponToDrop == null) return;
 
-        GameObject droppedWeapon = Instantiate(weaponPickupPrefab, transform.position + Vector3.right * 1f, Quaternion.identity);
-        WeaponPickup pickup = droppedWeapon.GetComponent<WeaponPickup>();
+        // 1. Instancier le prefab de pickup
+        GameObject droppedWeapon = Instantiate(weaponPickupPrefab, transform.position + Vector3.right * 0.5f, Quaternion.identity);
 
+        // 2. Remplir les données
+        WeaponPickup pickup = droppedWeapon.GetComponent<WeaponPickup>();
         if (pickup != null)
         {
             pickup.weaponData = weaponToDrop;
+
+            // 3. Ajouter un visuel si nécessaire
             if (weaponToDrop.weaponVisualPrefab != null)
-            {  
+            {
                 GameObject visual = Instantiate(weaponToDrop.weaponVisualPrefab, droppedWeapon.transform);
                 visual.transform.localPosition = Vector3.zero;
             }
+
+            // 4. Appliquer une petite impulsion physique
+            Rigidbody2D rb = droppedWeapon.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.bodyType = RigidbodyType2D.Dynamic; // Forcer le corps dynamique
+                rb.gravityScale = 1f;
+                rb.linearVelocity = Vector2.zero; // Reset au cas où
+                rb.AddForce(new Vector2(Random.Range(-1f, 1f), 3f), ForceMode2D.Impulse);
+            }
         }
 
+        // 5. Supprimer l’arme visuelle dans la main
         if (equippedWeaponGO != null)
         {
             Destroy(equippedWeaponGO);
@@ -317,9 +332,8 @@ public class PlayerController : MonoBehaviour
 
         currentWeapon = null;
         canAttack = false;
-
-        Debug.Log("L'arme lâchée est : " + weaponToDrop.name);
     }
+
     
 
     void Attack()
@@ -394,19 +408,19 @@ public class PlayerController : MonoBehaviour
     {
         if (currentWeapon.attackEffectPrefab != null)
         {
-            GameObject arrow = Instantiate(currentWeapon.attackEffectPrefab, firePoint.position, firePoint.rotation);
-            Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            GameObject arrow = Instantiate(currentWeapon.attackEffectPrefab, firePoint.position, Quaternion.identity);
+            ArrowProjectile proj = arrow.GetComponent<ArrowProjectile>();
+            if (proj != null)
             {
-                float speed = 10f;
                 Vector2 direction = isFacingRight ? Vector2.right : Vector2.left;
-                rb.linearVelocity = direction * speed;
+                proj.Fire(direction);
             }
         }
 
         canAttack = false;
         Invoke(nameof(ResetAttack), 0.75f);
     }
+
 
     void ResetAttack()
     {

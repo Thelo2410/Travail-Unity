@@ -7,6 +7,8 @@ public class WeaponPickup : MonoBehaviour
     public Weapon weaponData;
     private Text interactUI;
     private bool isInRange;
+    private Rigidbody2D rb;
+
 
 
 
@@ -18,9 +20,17 @@ public class WeaponPickup : MonoBehaviour
        spawnTime = Time.time;
     }
 
-        void Awake()
+    void Awake()
     {
         interactUI = GameObject.FindGameObjectWithTag("InteractUI").GetComponent<Text>();
+        rb = GetComponent<Rigidbody2D>();
+    }
+    void Update()
+    {
+        if (rb != null && rb.bodyType == RigidbodyType2D.Dynamic && rb.linearVelocity.magnitude < 0.05f && Time.time - spawnTime > 0.5f)
+        {
+            rb.bodyType = RigidbodyType2D.Static;
+        }
     }
 
     public bool CanBePickedUp()
