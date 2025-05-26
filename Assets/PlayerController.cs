@@ -175,17 +175,6 @@ public class PlayerController : MonoBehaviour
         }
 
         if (grounded) RefillFuel();
-
-        float targetAngle = Mathf.Clamp(-moveInput * maxTiltAngle, -maxTiltAngle, maxTiltAngle);
-        float smoothAngle = Mathf.LerpAngle(rb.rotation, targetAngle, rotationSpeed * Time.fixedDeltaTime);
-        rb.MoveRotation(smoothAngle);
-
-        if (grounded && Mathf.Approximately(moveInput, 0f))
-        {
-            float uprightAngle = Mathf.LerpAngle(rb.rotation, 0f, normalizeRotationSpeed * Time.fixedDeltaTime);
-            rb.MoveRotation(uprightAngle);
-        }
-
         currentFuel = Mathf.Clamp(currentFuel, 0f, fuel);
     }
 
