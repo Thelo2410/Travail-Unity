@@ -1,10 +1,13 @@
 fileFormatVersion: 2
-guid: a544ecd7922ea314ebc25bd403a9ae84
+guid: 0a81fae03ca9141268182a03a8e4afce
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6843330716327185247
-    second: grecq_soldier_0
+      213: 6102908386699866234
+    second: JumpFallInbetween_0
+  - first:
+      213: 2757721902875292707
+    second: JumpFallInbetween_1
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +49,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 8
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,13 +103,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: grecq_soldier_0
+      name: JumpFallInbetween_0
       rect:
         serializedVersion: 2
-        x: 32
-        y: 34
-        width: 362
-        height: 544
+        x: 40
+        y: 0
+        width: 29
+        height: 39
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +118,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f5b833b670568fe50800000000000000
-      internalID: 6843330716327185247
+      spriteID: a707ff5d7d2e1b450800000000000000
+      internalID: 6102908386699866234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: JumpFallInbetween_1
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 0
+        width: 31
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 324323aa575654620800000000000000
+      internalID: 2757721902875292707
       vertices: []
       indices: 
       edges: []
@@ -125,7 +150,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +160,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      grecq_soldier_0: 6843330716327185247
+      JumpFallInbetween_0: 6102908386699866234
+      JumpFallInbetween_1: 2757721902875292707
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

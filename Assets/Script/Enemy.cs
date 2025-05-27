@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -6,77 +5,35 @@ public class Enemy : MonoBehaviour
     [Header("Stats")]
     public int maxHealth = 10;
     private int currentHealth;
-    private bool isDead = false;
-
-    [Header("Animations")]
-    public Animator animator;
-    private static readonly int IsHitHash  = Animator.StringToHash("isHit");
-    private static readonly int AttackHash = Animator.StringToHash("Attack");
 
     [Header("Effets")]
     public GameObject deathEffect;
 
-    [Header("Hit Flash")]
-    [SerializeField] private Color hitColor          = Color.red;
-    [SerializeField] private float hitFlashDuration  = 0.1f;
-
-    private SpriteRenderer spriteRenderer;
-    private Color originalColor;
-
     void Start()
     {
-        currentHealth   = maxHealth;
-        spriteRenderer  = GetComponent<SpriteRenderer>();
-        originalColor   = spriteRenderer.color;
+        currentHealth = maxHealth;
     }
 
     public void TakeDamage(int amount)
     {
-        if (isDead) return;
-
         currentHealth -= amount;
-        Debug.Log($"{name} prend {amount} dégâts ! Vie restante : {currentHealth}");
-
-        // anim hit
-        animator?.SetTrigger(IsHitHash);
-
-        // hit rouge
-        if (spriteRenderer != null)
-            StartCoroutine(FlashHitColor());
+        Debug.Log($"{gameObject.name} a pris {amount} dégâts ! Vie restante : {currentHealth}");
 
         if (currentHealth <= 0)
-            StartCoroutine(Die());
+        {
+            Die();
+        }
     }
 
-    public void Attack()
+    void Die()
     {
-        if (isDead) return;
-        animator?.SetTrigger(AttackHash);
-    }
-
-    private IEnumerator FlashHitColor()
-    {
-        // passe en rouge si toucher
-        spriteRenderer.color = hitColor;
-        yield return new WaitForSeconds(hitFlashDuration);
-        // restaure la couleur
-        spriteRenderer.color = originalColor;
-    }
-
-    private IEnumerator Die()
-    {
-        isDead = true;
-
-        // récup d’abord le collider dans une variable
-        Collider2D col2D = GetComponent<Collider2D>();
-        if (col2D != null)
-            col2D.enabled = false;
-
-        yield return new WaitForSeconds(0.1f);
-
+        Debug.Log($"{gameObject.name} est mort !");
+        
         if (deathEffect != null)
+        {
             Instantiate(deathEffect, transform.position, Quaternion.identity);
-
+        }
+        
         GetComponent<LootDropper>()?.DropLoot();
         Destroy(gameObject);
     }

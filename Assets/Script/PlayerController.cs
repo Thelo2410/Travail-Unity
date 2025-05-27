@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float wallJumpForce = 16f; 
     [SerializeField] private float wallJumpHorizontalForce = 8f;
     [SerializeField] private float wallSlideSpeed = 2f;
+
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 100f; 
     [SerializeField] private float normalizeRotationSpeed = 3f; 
@@ -126,7 +127,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.T) && nearbyWeapon != null && nearbyWeapon.CanBePickedUp())
         {
-           EquipWeapon(nearbyWeapon.weaponData);
+            EquipWeapon(nearbyWeapon.weaponData);
             Destroy(nearbyWeapon.gameObject);
             nearbyWeapon = null;
         }
@@ -155,6 +156,14 @@ public class PlayerController : MonoBehaviour
                 break;
             }
         }
+
+        float vy = rb.linearVelocity.y;
+
+        bool jumpUp  = !grounded && vy > 0.1f;
+        bool falling = !grounded && vy < -0.1f;
+
+        animator.SetBool("isJumping", jumpUp);
+        animator.SetBool("isFalling", falling);
 
         if (!wasGrounded && grounded && rb.linearVelocity.y < -2f)
         {
