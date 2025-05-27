@@ -10,7 +10,6 @@ public class PlayerHealth : MonoBehaviour
     public AudioClip hitSound;
 
 
-//permet de gerer la santé du joueur : limité entre 0 et santé max
     public int CurrentHealth
     {
         get => currentHealth;
@@ -79,7 +78,6 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-//je n'ai pas mis l'ecran game over pour l'instant ni le respawn
     public void Die()
     {
         PlayerController.instance.enabled = false;

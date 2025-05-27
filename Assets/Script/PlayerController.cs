@@ -8,11 +8,12 @@ public class PlayerController : MonoBehaviour
     public Collider2D playerCollider;
 
     [Header("Mouvement & Saut")]
-    [SerializeField] private float moveSpeed = 16f;
+    public float moveSpeed = 16f;
     [SerializeField] private float jumpForce = 15f; 
     [SerializeField] private float wallJumpForce = 16f; 
     [SerializeField] private float wallJumpHorizontalForce = 8f;
     [SerializeField] private float wallSlideSpeed = 2f;
+
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 100f; 
     [SerializeField] private float normalizeRotationSpeed = 3f; 
@@ -44,6 +45,11 @@ public class PlayerController : MonoBehaviour
 
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    public GameObject jumpDustPrefab;
+    public GameObject landDustPrefab;
+    public GameObject swordSlashFX;
+    public GameObject axeSlashFX;
+
 
 
 
@@ -85,19 +91,24 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0f;
 
         currentFuel = fuel;
-        //initatilisation de l'animator
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        moveInput = Input.GetAxisRaw("Horizontal");
+        moveInput = Input.GetAxis("Horizontal");
         jumpPressed = Input.GetButtonDown("Jump");
         fuelSlider.value = currentFuel / fuel;
-        //verifie si le joueur est entrain de courir(equivalent a avancer quoi)
         bool isRunning = !Mathf.Approximately(moveInput, 0f);
-        animator.SetBool("isRunning", isRunning);//parametre bool isrunning(donc il court)
+        animator.SetBool("isRunning", isRunning);
+
+
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (mouseWorldPos.x > transform.position.x && !isFacingRight)
+            Flip();
+        else if (mouseWorldPos.x < transform.position.x && isFacingRight)
+            Flip();
 
         if (jumpPressed)
         {
@@ -120,7 +131,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.T) && nearbyWeapon != null && nearbyWeapon.CanBePickedUp())
         {
-           EquipWeapon(nearbyWeapon.weaponData);
+            EquipWeapon(nearbyWeapon.weaponData);
             Destroy(nearbyWeapon.gameObject);
             nearbyWeapon = null;
         }
@@ -134,12 +145,11 @@ public class PlayerController : MonoBehaviour
         {
             Attack();
         }
-
-
     }
 
     void FixedUpdate()
     {
+        bool wasGrounded = grounded;
         Collider2D[] hits = Physics2D.OverlapBoxAll(groundPosition.position, new Vector2(boxLength, boxHeight), 0f);
         grounded = false;
         foreach (Collider2D hit in hits)
@@ -150,6 +160,20 @@ public class PlayerController : MonoBehaviour
                 break;
             }
         }
+
+        float vy = rb.linearVelocity.y;
+
+        bool jumpUp  = !grounded && vy > 0.1f;
+        bool falling = !grounded && vy < -0.1f;
+
+        animator.SetBool("isJumping", jumpUp);
+        animator.SetBool("isFalling", falling);
+
+        if (!wasGrounded && grounded && rb.linearVelocity.y < -2f)
+        {
+            TriggerLandParticles();
+        }
+
 
         coyoteTimer = grounded ? coyoteTime : coyoteTimer - Time.fixedDeltaTime;
 
@@ -175,17 +199,6 @@ public class PlayerController : MonoBehaviour
         }
 
         if (grounded) RefillFuel();
-
-        float targetAngle = Mathf.Clamp(-moveInput * maxTiltAngle, -maxTiltAngle, maxTiltAngle);
-        float smoothAngle = Mathf.LerpAngle(rb.rotation, targetAngle, rotationSpeed * Time.fixedDeltaTime);
-        rb.MoveRotation(smoothAngle);
-
-        if (grounded && Mathf.Approximately(moveInput, 0f))
-        {
-            float uprightAngle = Mathf.LerpAngle(rb.rotation, 0f, normalizeRotationSpeed * Time.fixedDeltaTime);
-            rb.MoveRotation(uprightAngle);
-        }
-
         currentFuel = Mathf.Clamp(currentFuel, 0f, fuel);
     }
 
@@ -194,6 +207,7 @@ public class PlayerController : MonoBehaviour
         if (jumpBuffered && coyoteTimer > 0f)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            TriggerJumpParticles(); 
             canDoubleJump = true;
             isWallJumping = false;
             jumpBuffered = false;
@@ -203,6 +217,23 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             canDoubleJump = false;
             jumpBuffered = false;
+        }
+    }
+
+    void TriggerJumpParticles()
+    {
+        if (jumpDustPrefab != null)
+        {
+            Vector3 spawnPos = new Vector3(transform.position.x, groundPosition.position.y, 0);
+            Instantiate(jumpDustPrefab, spawnPos, Quaternion.identity);
+        }
+    }
+    void TriggerLandParticles()
+    {
+        if (landDustPrefab != null)
+        {
+            Vector3 spawnPos = new Vector3(transform.position.x, groundPosition.position.y, 0);
+            Instantiate(landDustPrefab, spawnPos, Quaternion.identity);
         }
     }
 
@@ -275,11 +306,6 @@ public class PlayerController : MonoBehaviour
     }
 
 
-
-
-
-
-
     public void EquipWeapon(Weapon newWeapon)
     {
         if (currentWeapon != null)
@@ -307,16 +333,26 @@ public class PlayerController : MonoBehaviour
     {
         if (weaponToDrop == null) return;
 
-        GameObject droppedWeapon = Instantiate(weaponPickupPrefab, transform.position + Vector3.right * 1f, Quaternion.identity);
-        WeaponPickup pickup = droppedWeapon.GetComponent<WeaponPickup>();
+        GameObject droppedWeapon = Instantiate(weaponPickupPrefab, transform.position + Vector3.right * 0.5f, Quaternion.identity);
 
+        WeaponPickup pickup = droppedWeapon.GetComponent<WeaponPickup>();
         if (pickup != null)
         {
             pickup.weaponData = weaponToDrop;
+
             if (weaponToDrop.weaponVisualPrefab != null)
-            {  
+            {
                 GameObject visual = Instantiate(weaponToDrop.weaponVisualPrefab, droppedWeapon.transform);
                 visual.transform.localPosition = Vector3.zero;
+            }
+
+            Rigidbody2D rb = droppedWeapon.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.bodyType = RigidbodyType2D.Dynamic;
+                rb.gravityScale = 1f;
+                rb.linearVelocity = Vector2.zero;
+                rb.AddForce(new Vector2(Random.Range(-1f, 1f), 3f), ForceMode2D.Impulse);
             }
         }
 
@@ -328,9 +364,8 @@ public class PlayerController : MonoBehaviour
 
         currentWeapon = null;
         canAttack = false;
-
-        Debug.Log("L'arme lâchée est : " + weaponToDrop.name);
     }
+
     
 
     void Attack()
@@ -366,6 +401,22 @@ public class PlayerController : MonoBehaviour
             Destroy(fx, 0.3f);
         }
 
+        if (swordSlashFX != null)
+        {
+            Vector3 spawnPos = firePoint.position + new Vector3(isFacingRight ? 0.5f : -0.5f, 0f, 0f);
+
+            GameObject slash = Instantiate(swordSlashFX, spawnPos, Quaternion.identity);
+
+            Vector3 scale = slash.transform.localScale;
+
+            if (isFacingRight)
+                scale.x = 8f;
+            else
+                scale.x = -8f;
+
+            slash.transform.localScale = scale;
+        }
+
         Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, 0f, LayerMask.GetMask("Enemy"));
         foreach (Collider2D hit in hits)
         {
@@ -380,7 +431,7 @@ public class PlayerController : MonoBehaviour
 
     void AxeAttack()
     {
-        float radius = 3.5f;
+        float radius = 3f;
         Vector3 center = transform.position;
 
         if (currentWeapon.attackEffectPrefab != null)
@@ -397,6 +448,16 @@ public class PlayerController : MonoBehaviour
         }
 
         canAttack = false;
+
+        if (axeSlashFX != null)
+        {
+            Vector3 spawnPos = firePoint.position + new Vector3(isFacingRight ? 0.5f : 0f, 0f, 0f);
+            GameObject slash = Instantiate(axeSlashFX, spawnPos, Quaternion.identity);
+
+            Vector3 scale = slash.transform.localScale;
+            scale.x = isFacingRight ? 2f : -2f;
+            slash.transform.localScale = scale;
+        }
         Invoke(nameof(ResetAttack), 1f);
     }
 
@@ -405,19 +466,25 @@ public class PlayerController : MonoBehaviour
     {
         if (currentWeapon.attackEffectPrefab != null)
         {
-            GameObject arrow = Instantiate(currentWeapon.attackEffectPrefab, firePoint.position, firePoint.rotation);
-            Rigidbody2D rb = arrow.GetComponent<Rigidbody2D>();
-            if (rb != null)
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPos.z = 0f;
+
+            Vector2 direction = (mouseWorldPos - firePoint.position).normalized;
+
+            GameObject arrow = Instantiate(currentWeapon.attackEffectPrefab, firePoint.position, Quaternion.identity);
+
+            ArrowProjectile proj = arrow.GetComponent<ArrowProjectile>();
+            if (proj != null)
             {
-                float speed = 10f;
-                Vector2 direction = isFacingRight ? Vector2.right : Vector2.left;
-                rb.linearVelocity = direction * speed;
+                proj.Fire(direction);
             }
         }
 
         canAttack = false;
         Invoke(nameof(ResetAttack), 0.75f);
     }
+
+
 
     void ResetAttack()
     {
