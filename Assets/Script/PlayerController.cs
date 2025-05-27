@@ -86,7 +86,6 @@ public class PlayerController : MonoBehaviour
         rb.gravityScale = 0f;
 
         currentFuel = fuel;
-        //initatilisation de l'animator
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -141,8 +140,6 @@ public class PlayerController : MonoBehaviour
         {
             Attack();
         }
-
-
     }
 
     void FixedUpdate()
@@ -296,11 +293,6 @@ public class PlayerController : MonoBehaviour
     }
 
 
-
-
-
-
-
     public void EquipWeapon(Weapon newWeapon)
     {
         if (currentWeapon != null)
@@ -328,34 +320,29 @@ public class PlayerController : MonoBehaviour
     {
         if (weaponToDrop == null) return;
 
-        // 1. Instancier le prefab de pickup
         GameObject droppedWeapon = Instantiate(weaponPickupPrefab, transform.position + Vector3.right * 0.5f, Quaternion.identity);
 
-        // 2. Remplir les données
         WeaponPickup pickup = droppedWeapon.GetComponent<WeaponPickup>();
         if (pickup != null)
         {
             pickup.weaponData = weaponToDrop;
 
-            // 3. Ajouter un visuel si nécessaire
             if (weaponToDrop.weaponVisualPrefab != null)
             {
                 GameObject visual = Instantiate(weaponToDrop.weaponVisualPrefab, droppedWeapon.transform);
                 visual.transform.localPosition = Vector3.zero;
             }
 
-            // 4. Appliquer une petite impulsion physique
             Rigidbody2D rb = droppedWeapon.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                rb.bodyType = RigidbodyType2D.Dynamic; // Forcer le corps dynamique
+                rb.bodyType = RigidbodyType2D.Dynamic;
                 rb.gravityScale = 1f;
-                rb.linearVelocity = Vector2.zero; // Reset au cas où
+                rb.linearVelocity = Vector2.zero;
                 rb.AddForce(new Vector2(Random.Range(-1f, 1f), 3f), ForceMode2D.Impulse);
             }
         }
 
-        // 5. Supprimer l’arme visuelle dans la main
         if (equippedWeaponGO != null)
         {
             Destroy(equippedWeaponGO);
@@ -440,14 +427,11 @@ public class PlayerController : MonoBehaviour
     {
         if (currentWeapon.attackEffectPrefab != null)
         {
-            // Obtenir la position du curseur dans le monde
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mouseWorldPos.z = 0f;
 
-            // Calculer la direction de tir
             Vector2 direction = (mouseWorldPos - firePoint.position).normalized;
 
-            // Instancier la flèche
             GameObject arrow = Instantiate(currentWeapon.attackEffectPrefab, firePoint.position, Quaternion.identity);
 
             ArrowProjectile proj = arrow.GetComponent<ArrowProjectile>();
