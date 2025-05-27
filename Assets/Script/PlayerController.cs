@@ -96,9 +96,15 @@ public class PlayerController : MonoBehaviour
         moveInput = Input.GetAxis("Horizontal");
         jumpPressed = Input.GetButtonDown("Jump");
         fuelSlider.value = currentFuel / fuel;
-        //verifie si le joueur est entrain de courir(equivalent a avancer quoi)
         bool isRunning = !Mathf.Approximately(moveInput, 0f);
-        animator.SetBool("isRunning", isRunning);//parametre bool isrunning(donc il court)
+        animator.SetBool("isRunning", isRunning);
+
+
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        if (mouseWorldPos.x > transform.position.x && !isFacingRight)
+            Flip();
+        else if (mouseWorldPos.x < transform.position.x && isFacingRight)
+            Flip();
 
         if (jumpPressed)
         {
@@ -434,11 +440,19 @@ public class PlayerController : MonoBehaviour
     {
         if (currentWeapon.attackEffectPrefab != null)
         {
+            // Obtenir la position du curseur dans le monde
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mouseWorldPos.z = 0f;
+
+            // Calculer la direction de tir
+            Vector2 direction = (mouseWorldPos - firePoint.position).normalized;
+
+            // Instancier la flèche
             GameObject arrow = Instantiate(currentWeapon.attackEffectPrefab, firePoint.position, Quaternion.identity);
+
             ArrowProjectile proj = arrow.GetComponent<ArrowProjectile>();
             if (proj != null)
             {
-                Vector2 direction = isFacingRight ? Vector2.right : Vector2.left;
                 proj.Fire(direction);
             }
         }
@@ -446,6 +460,7 @@ public class PlayerController : MonoBehaviour
         canAttack = false;
         Invoke(nameof(ResetAttack), 0.75f);
     }
+
 
 
     void ResetAttack()

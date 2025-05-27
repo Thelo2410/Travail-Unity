@@ -31,21 +31,23 @@ public class ArrowProjectile : MonoBehaviour
 
     public void Fire(Vector2 direction)
     {
-        rb.linearVelocity = direction.normalized * speed;
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
 
-        Collider2D playerCollider = GameObject.FindWithTag("Player")?.GetComponent<Collider2D>();
-        Collider2D arrowCollider = GetComponent<Collider2D>();
-        if (playerCollider != null && arrowCollider != null)
+        rb.linearVelocity = direction * speed;
+
+        Collider2D playerCol = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Collider2D>();
+        Collider2D arrowCol = GetComponent<Collider2D>();
+        if (playerCol != null && arrowCol != null)
         {
-            Physics2D.IgnoreCollision(arrowCollider, playerCollider, true);
+            Physics2D.IgnoreCollision(arrowCol, playerCol);
         }
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
-        if (shootSound != null && audioSource != null)
-            audioSource.PlayOneShot(shootSound);
+        Destroy(gameObject, lifetime);
     }
+
 
 
     void Update()
