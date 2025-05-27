@@ -155,7 +155,7 @@ SpriteRenderer:
   m_Size: {x: 2.495, y: 2.495}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &5260115040489247743
@@ -195,9 +195,14 @@ MonoBehaviour:
   wallLayer:
     serializedVersion: 2
     m_Bits: 0
+  jumpDustPrefab: {fileID: 6364982908651376994, guid: ce5334cab34904489a7df9cd1ac3637f, type: 3}
+  landDustPrefab: {fileID: 4298912242617233988, guid: 65c254a47119a4b5f8bd65d83421a785, type: 3}
+  swordSlashFX: {fileID: 4628363471738039311, guid: 237f9373a52fb4b5ab7a68466722708f, type: 3}
+  axeSlashFX: {fileID: 8853462791556104733, guid: fae744b6302fb44a3a5ba89577627032, type: 3}
   firePoint: {fileID: 5394432884637142390}
   weaponPickupPrefab: {fileID: 6156664560480541188, guid: 7c73992924ae2451bb6d390e0c6a68ad, type: 3}
   weaponHolder: {fileID: 4935499574599966578}
+  reticlePrefab: {fileID: 8536803032468887678, guid: ce9a49514b17e494e949c3a5b6ef7ae5, type: 3}
 --- !u!114 &8032700455885986328
 MonoBehaviour:
   m_ObjectHideFlags: 0

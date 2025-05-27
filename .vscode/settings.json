@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Sans titre.sln"
+    "dotnet.defaultSolution": "Travail-Unity.sln"
 }
