@@ -47,6 +47,10 @@ public class PlayerController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     public GameObject jumpDustPrefab;
     public GameObject landDustPrefab;
+    public GameObject swordSlashFX;
+    public GameObject axeSlashFX;
+
+
 
 
     private bool canDoubleJump;
@@ -397,6 +401,22 @@ public class PlayerController : MonoBehaviour
             Destroy(fx, 0.3f);
         }
 
+        if (swordSlashFX != null)
+        {
+            Vector3 spawnPos = firePoint.position + new Vector3(isFacingRight ? 0.5f : -0.5f, 0f, 0f);
+
+            GameObject slash = Instantiate(swordSlashFX, spawnPos, Quaternion.identity);
+
+            Vector3 scale = slash.transform.localScale;
+
+            if (isFacingRight)
+                scale.x = 8f;
+            else
+                scale.x = -8f;
+
+            slash.transform.localScale = scale;
+        }
+
         Collider2D[] hits = Physics2D.OverlapBoxAll(boxCenter, boxSize, 0f, LayerMask.GetMask("Enemy"));
         foreach (Collider2D hit in hits)
         {
@@ -411,7 +431,7 @@ public class PlayerController : MonoBehaviour
 
     void AxeAttack()
     {
-        float radius = 3.5f;
+        float radius = 3f;
         Vector3 center = transform.position;
 
         if (currentWeapon.attackEffectPrefab != null)
@@ -428,6 +448,16 @@ public class PlayerController : MonoBehaviour
         }
 
         canAttack = false;
+
+        if (axeSlashFX != null)
+        {
+            Vector3 spawnPos = firePoint.position + new Vector3(isFacingRight ? 0.5f : 0f, 0f, 0f);
+            GameObject slash = Instantiate(axeSlashFX, spawnPos, Quaternion.identity);
+
+            Vector3 scale = slash.transform.localScale;
+            scale.x = isFacingRight ? 2f : -2f;
+            slash.transform.localScale = scale;
+        }
         Invoke(nameof(ResetAttack), 1f);
     }
 
