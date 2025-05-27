@@ -481,6 +481,17 @@ public class PlayerController : MonoBehaviour
             scale.x = isFacingRight ? 2f : -2f;
             slash.transform.localScale = scale;
         }
+
+        Collider2D[] walls = Physics2D.OverlapCircleAll(transform.position, 2f, LayerMask.GetMask("Destructible"));
+
+        foreach (Collider2D wall in walls)
+        {
+            DestructibleWall dw = wall.GetComponent<DestructibleWall>();
+            if (dw != null)
+            {
+                dw.Break();
+            }
+        }
         Invoke(nameof(ResetAttack), 1f);
     }
 
