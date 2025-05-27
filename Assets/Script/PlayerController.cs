@@ -73,10 +73,12 @@ public class PlayerController : MonoBehaviour
     private float attackCooldown = 0f;
     private bool canAttack = true;
 
-    private WeaponPickup nearbyWeapon;
 
+    private WeaponPickup nearbyWeapon;
     public Transform weaponHolder;
     private GameObject equippedWeaponGO;
+    public GameObject reticlePrefab;
+    private GameObject reticleInstance;
 
 
     void Awake()
@@ -325,6 +327,22 @@ public class PlayerController : MonoBehaviour
             equippedWeaponGO = Instantiate(currentWeapon.weaponVisualPrefab, weaponHolder.position, weaponHolder.rotation, weaponHolder);
         }
         
+        if (newWeapon.weaponType == WeaponType.Bow && reticlePrefab != null)
+        {
+            if (reticleInstance == null)
+            {
+                reticleInstance = Instantiate(reticlePrefab);
+            }
+            reticleInstance.SetActive(true);
+            Cursor.visible = false;
+        }
+        else
+        {
+            if (reticleInstance != null)
+                reticleInstance.SetActive(false);
+
+            Cursor.visible = true;
+        }
         canAttack = true;
     }
 
@@ -361,6 +379,11 @@ public class PlayerController : MonoBehaviour
             Destroy(equippedWeaponGO);
             equippedWeaponGO = null;
         }
+
+        if (reticleInstance != null)
+            reticleInstance.SetActive(false);
+
+        Cursor.visible = true;
 
         currentWeapon = null;
         canAttack = false;
