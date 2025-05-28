@@ -5,9 +5,11 @@ public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth = 100;
 
-    private int currentHealth;
+    private int currentHealth = 0;
 
-//permet de gerer la santé du joueur : limité entre 0 et santé max
+    public AudioClip hitSound;
+
+
     public int CurrentHealth
     {
         get => currentHealth;
@@ -61,6 +63,7 @@ public class PlayerHealth : MonoBehaviour
     {
         if (!isInvincible)
         {
+            AudioManager.instance.PlayClipAt(hitSound, transform.position);
             CurrentHealth -= damage;
 
             if (CurrentHealth <= 0)
@@ -75,14 +78,13 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-//je n'ai pas mis l'ecran game over pour l'instant ni le respawn
     public void Die()
     {
         PlayerController.instance.enabled = false;
         PlayerController.instance.rb.bodyType = RigidbodyType2D.Kinematic;
         PlayerController.instance.rb.linearVelocity = Vector2.zero;
         PlayerController.instance.playerCollider.enabled = false;
-
+        GameOverManager.instance.OnPlayerDeath();
         Debug.Log("Le joueur est mort .");
     }
 

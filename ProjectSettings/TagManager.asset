@@ -9,6 +9,7 @@ TagManager:
   - Ground
   - Ladder
   - WeaponPickup
+  - InteractUI
   layers:
   - Default
   - TransparentFX
@@ -45,6 +46,9 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Fx
+    uniqueID: 2473743539
     locked: 0
   m_RenderingLayers:
   - Default

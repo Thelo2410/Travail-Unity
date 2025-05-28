@@ -15,6 +15,7 @@ public class DeathZone : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             StartCoroutine(ReplacePlayer(collision));
+            Debug.Log("Player is in the death zone!");
         }
     }
 

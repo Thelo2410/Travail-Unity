@@ -16,5 +16,5 @@ MonoBehaviour:
   weaponType: 0
   damage: 5
   attackSpeed: 1.5
-  attackEffectPrefab: {fileID: 0}
+  attackEffectPrefab: {fileID: 238971071190424332, guid: 2c05f48b06c0d4d5c8d4c89aff166874, type: 3}
   weaponVisualPrefab: {fileID: 1020421608340384483, guid: 0e113ead03be24fc28992e1de0976f03, type: 3}
