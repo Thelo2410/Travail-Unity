@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2261319313059052257}
   m_Layer: 0
   m_Name: Bridge
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,7 +125,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.0075707436, y: 0.04603231}
+  m_Offset: {x: 0.0075707436, y: -2.2205882}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -135,7 +135,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 6.2966843, y: 6.3663397}
+  m_Size: {x: 6.2966843, y: 1.8330986}
   m_EdgeRadius: 0
 --- !u!50 &5210691175788596006
 Rigidbody2D:
@@ -180,7 +180,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   checkPosition: {fileID: 0}
-  checkRadius: 0.1
+  checkRadius: 0.5
 --- !u!1 &7035901502693743991
 GameObject:
   m_ObjectHideFlags: 0

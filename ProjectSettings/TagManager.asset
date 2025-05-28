@@ -10,6 +10,7 @@ TagManager:
   - Ladder
   - WeaponPickup
   - InteractUI
+  - Arrow
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - Enemy
   - Water
   - UI
-  - 
-  - 
+  - Destructible
+  - Ground
   - 
   - 
   - 
